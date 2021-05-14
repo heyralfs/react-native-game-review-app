@@ -1,16 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { globalStyles } from "../styles/globalStyles";
-import { Button, Text, View } from "react-native";
+import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
 
 export default function Home({ navigation }) {
-  const handlePress = () => {
-    navigation.navigate("ReviewDetails");
-  };
+  const [reviews, setReviews] = useState([
+    {
+      title: "Zelda, Breath of Fresh Air",
+      rating: 5,
+      body: "lorem ipsum",
+      key: "1",
+    },
+    {
+      title: "Gotta Catch Them All (again)",
+      rating: 4,
+      body: "lorem ipsum",
+      key: "2",
+    },
+    {
+      title: 'Not So "Final" Fantasy',
+      rating: 3,
+      body: "lorem ipsum",
+      key: "3",
+    },
+  ]);
 
   return (
     <View style={globalStyles.container}>
-      <Text style={globalStyles.titleText}> Home </Text>
-      <Button title="go to review dets" onPress={handlePress} />
+      <FlatList
+        data={reviews}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ReviewDetails", item)}
+          >
+            <Text style={globalStyles.titleText}>{item.title}</Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 }
