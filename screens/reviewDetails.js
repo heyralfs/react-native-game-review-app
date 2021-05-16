@@ -12,7 +12,7 @@ export default function ReviewDetails({ navigation }) {
         <View style={styles.rating}>
           <Text>GameZone rating: </Text>
           <View style={styles.hearts} key={navigation.getParam("rating")}>
-            {Array(navigation.getParam("rating"))
+            {Array(Number(navigation.getParam("rating")))
               .fill()
               .map((item, index) => (
                 <Image source={require("../assets/rating-1.png")} key={index} />

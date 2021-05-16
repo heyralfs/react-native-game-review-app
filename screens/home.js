@@ -1,7 +1,19 @@
 import React, { useState } from "react";
 import { globalStyles } from "../styles/globalStyles";
-import { Button, FlatList, Text, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  FlatList,
+  Keyboard,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import Card from "../shared/card";
+import { MaterialIcons } from "@expo/vector-icons";
+import ReviewForm from "./reviewForm";
 
 export default function Home({ navigation }) {
   const [reviews, setReviews] = useState([
@@ -25,8 +37,39 @@ export default function Home({ navigation }) {
     },
   ]);
 
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const addReview = (review) => {
+    review.key = (Math.random() * 999).toString();
+    setReviews((currentReviews) => {
+      return [review, ...currentReviews];
+    });
+    setModalOpen(false);
+  };
+
   return (
     <View style={globalStyles.container}>
+      <Modal visible={modalOpen} animationType="slide">
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.modalContent}>
+            <MaterialIcons
+              name="close"
+              size={24}
+              onPress={() => setModalOpen(false)}
+              style={{ ...styles.modalToggle, ...styles.modalClose }}
+            />
+            <ReviewForm addReview={addReview} />
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <MaterialIcons
+        name="add"
+        size={24}
+        onPress={() => setModalOpen(true)}
+        style={styles.modalToggle}
+      />
+
       <FlatList
         data={reviews}
         renderItem={({ item }) => (
@@ -42,3 +85,21 @@ export default function Home({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  modalToggle: {
+    marginBottom: 10,
+    borderWidth: 1,
+    borderColor: "#2E8B57",
+    padding: 10,
+    borderRadius: 10,
+    alignSelf: "center",
+  },
+  modalClose: {
+    marginBottom: 0,
+  },
+  modalContent: {
+    flex: 1,
+    padding: 20,
+  },
+});
