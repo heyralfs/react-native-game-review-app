@@ -18,9 +18,12 @@ export const globalStyles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#2E8B57",
     padding: 10,
+    paddingTop: 16,
     fontSize: 16,
     borderRadius: 6,
     marginBottom: 0,
+    textAlignVertical: "top",
+    minHeight: 20,
   },
   errorText: {
     color: "crimson",
