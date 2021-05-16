@@ -1,7 +1,19 @@
 import React from "react";
 import { StyleSheet, Button, TextInput, Text, View } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
-import { Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
+import * as yup from "yup";
+
+const reviewSchema = yup.object({
+  title: yup.string().required().min(4),
+  body: yup.string().required().min(8),
+  rating: yup
+    .string()
+    .required()
+    .test("is-num-1-5", "Rating must be a number 1 - 5", (val) => {
+      return parseInt(val) < 6 && parseInt(val) > 0;
+    }),
+});
 
 export default function ReviewForm({ addReview }) {
   return (
@@ -12,12 +24,13 @@ export default function ReviewForm({ addReview }) {
           body: "",
           rating: "",
         }}
+        validationSchema={reviewSchema}
         onSubmit={(values, actions) => {
           addReview(values);
           actions.resetForm();
         }}
       >
-        {({ values, handleChange, handleSubmit }) => (
+        {({ values, handleChange, handleSubmit, errors, touched }) => (
           <View>
             <TextInput
               style={globalStyles.input}
@@ -25,6 +38,9 @@ export default function ReviewForm({ addReview }) {
               onChangeText={handleChange("title")}
               value={values.title}
             />
+            <Text style={globalStyles.errorText}>
+              {touched.title && errors.title}
+            </Text>
 
             <TextInput
               multiline
@@ -33,6 +49,9 @@ export default function ReviewForm({ addReview }) {
               onChangeText={handleChange("body")}
               value={values.body}
             />
+            <Text style={globalStyles.errorText}>
+              {touched.body && errors.body}
+            </Text>
 
             <TextInput
               style={globalStyles.input}
@@ -41,6 +60,9 @@ export default function ReviewForm({ addReview }) {
               value={values.rating}
               keyboardType="numeric"
             />
+            <Text style={globalStyles.errorText}>
+              {touched.rating && errors.rating}
+            </Text>
 
             <Button title="submit" color="#2E8B57" onPress={handleSubmit} />
           </View>
